@@ -1,0 +1,546 @@
+{
+ "cells": [
+  {
+   "cell_type": "markdown",
+   "id": "f88efaca",
+   "metadata": {
+    "papermill": {
+     "duration": 0.003446,
+     "end_time": "2025-03-12T07:03:56.957199",
+     "exception": false,
+     "start_time": "2025-03-12T07:03:56.953753",
+     "status": "completed"
+    },
+    "tags": []
+   },
+   "source": [
+    "# Overview of the Oral Cancer Prediction Project"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "935d4e3d",
+   "metadata": {
+    "papermill": {
+     "duration": 0.002654,
+     "end_time": "2025-03-12T07:03:56.963230",
+     "exception": false,
+     "start_time": "2025-03-12T07:03:56.960576",
+     "status": "completed"
+    },
+    "tags": []
+   },
+   "source": [
+    "This project aims to develop a machine learning model to predict oral cancer diagnosis based on various risk factors, symptoms, and demographic information. The dataset contains 84,922 rows and 25 columns, including features like age, gender, tobacco use, alcohol consumption, HPV infection, and various oral symptoms."
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "422b5234",
+   "metadata": {
+    "papermill": {
+     "duration": 0.002597,
+     "end_time": "2025-03-12T07:03:56.968674",
+     "exception": false,
+     "start_time": "2025-03-12T07:03:56.966077",
+     "status": "completed"
+    },
+    "tags": []
+   },
+   "source": [
+    "## 1. Project Setup  "
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 1,
+   "id": "d36e105f",
+   "metadata": {
+    "execution": {
+     "iopub.execute_input": "2025-03-12T07:03:56.975720Z",
+     "iopub.status.busy": "2025-03-12T07:03:56.975350Z",
+     "iopub.status.idle": "2025-03-12T07:03:58.026685Z",
+     "shell.execute_reply": "2025-03-12T07:03:58.024913Z"
+    },
+    "papermill": {
+     "duration": 1.057378,
+     "end_time": "2025-03-12T07:03:58.028872",
+     "exception": false,
+     "start_time": "2025-03-12T07:03:56.971494",
+     "status": "completed"
+    },
+    "tags": []
+   },
+   "outputs": [],
+   "source": [
+    "# import libraries\n",
+    "import pandas as pd"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "7dfb2c3d",
+   "metadata": {
+    "papermill": {
+     "duration": 0.002792,
+     "end_time": "2025-03-12T07:03:58.035075",
+     "exception": false,
+     "start_time": "2025-03-12T07:03:58.032283",
+     "status": "completed"
+    },
+    "tags": []
+   },
+   "source": [
+    "## 2. Problem Definition & Data Exploration"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 2,
+   "id": "6dd559c3",
+   "metadata": {
+    "execution": {
+     "iopub.execute_input": "2025-03-12T07:03:58.042576Z",
+     "iopub.status.busy": "2025-03-12T07:03:58.041961Z",
+     "iopub.status.idle": "2025-03-12T07:03:58.604606Z",
+     "shell.execute_reply": "2025-03-12T07:03:58.603540Z"
+    },
+    "papermill": {
+     "duration": 0.568518,
+     "end_time": "2025-03-12T07:03:58.606560",
+     "exception": false,
+     "start_time": "2025-03-12T07:03:58.038042",
+     "status": "completed"
+    },
+    "tags": []
+   },
+   "outputs": [
+    {
+     "data": {
+      "text/html": [
+       "<div>\n",
+       "<style scoped>\n",
+       "    .dataframe tbody tr th:only-of-type {\n",
+       "        vertical-align: middle;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe tbody tr th {\n",
+       "        vertical-align: top;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe thead th {\n",
+       "        text-align: right;\n",
+       "    }\n",
+       "</style>\n",
+       "<table border=\"1\" class=\"dataframe\">\n",
+       "  <thead>\n",
+       "    <tr style=\"text-align: right;\">\n",
+       "      <th></th>\n",
+       "      <th>ID</th>\n",
+       "      <th>Country</th>\n",
+       "      <th>Age</th>\n",
+       "      <th>Gender</th>\n",
+       "      <th>Tobacco Use</th>\n",
+       "      <th>Alcohol Consumption</th>\n",
+       "      <th>HPV Infection</th>\n",
+       "      <th>Betel Quid Use</th>\n",
+       "      <th>Chronic Sun Exposure</th>\n",
+       "      <th>Poor Oral Hygiene</th>\n",
+       "      <th>...</th>\n",
+       "      <th>Difficulty Swallowing</th>\n",
+       "      <th>White or Red Patches in Mouth</th>\n",
+       "      <th>Tumor Size (cm)</th>\n",
+       "      <th>Cancer Stage</th>\n",
+       "      <th>Treatment Type</th>\n",
+       "      <th>Survival Rate (5-Year, %)</th>\n",
+       "      <th>Cost of Treatment (USD)</th>\n",
+       "      <th>Economic Burden (Lost Workdays per Year)</th>\n",
+       "      <th>Early Diagnosis</th>\n",
+       "      <th>Oral Cancer (Diagnosis)</th>\n",
+       "    </tr>\n",
+       "  </thead>\n",
+       "  <tbody>\n",
+       "    <tr>\n",
+       "      <th>0</th>\n",
+       "      <td>1</td>\n",
+       "      <td>Italy</td>\n",
+       "      <td>36</td>\n",
+       "      <td>Female</td>\n",
+       "      <td>Yes</td>\n",
+       "      <td>Yes</td>\n",
+       "      <td>Yes</td>\n",
+       "      <td>No</td>\n",
+       "      <td>No</td>\n",
+       "      <td>Yes</td>\n",
+       "      <td>...</td>\n",
+       "      <td>No</td>\n",
+       "      <td>No</td>\n",
+       "      <td>0.000000</td>\n",
+       "      <td>0</td>\n",
+       "      <td>No Treatment</td>\n",
+       "      <td>100.000000</td>\n",
+       "      <td>0.00</td>\n",
+       "      <td>0</td>\n",
+       "      <td>No</td>\n",
+       "      <td>No</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>1</th>\n",
+       "      <td>2</td>\n",
+       "      <td>Japan</td>\n",
+       "      <td>64</td>\n",
+       "      <td>Male</td>\n",
+       "      <td>Yes</td>\n",
+       "      <td>Yes</td>\n",
+       "      <td>Yes</td>\n",
+       "      <td>No</td>\n",
+       "      <td>Yes</td>\n",
+       "      <td>Yes</td>\n",
+       "      <td>...</td>\n",
+       "      <td>No</td>\n",
+       "      <td>No</td>\n",
+       "      <td>1.782186</td>\n",
+       "      <td>1</td>\n",
+       "      <td>No Treatment</td>\n",
+       "      <td>83.340103</td>\n",
+       "      <td>77772.50</td>\n",
+       "      <td>177</td>\n",
+       "      <td>No</td>\n",
+       "      <td>Yes</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>2</th>\n",
+       "      <td>3</td>\n",
+       "      <td>UK</td>\n",
+       "      <td>37</td>\n",
+       "      <td>Female</td>\n",
+       "      <td>No</td>\n",
+       "      <td>Yes</td>\n",
+       "      <td>No</td>\n",
+       "      <td>No</td>\n",
+       "      <td>Yes</td>\n",
+       "      <td>Yes</td>\n",
+       "      <td>...</td>\n",
+       "      <td>No</td>\n",
+       "      <td>Yes</td>\n",
+       "      <td>3.523895</td>\n",
+       "      <td>2</td>\n",
+       "      <td>Surgery</td>\n",
+       "      <td>63.222871</td>\n",
+       "      <td>101164.50</td>\n",
+       "      <td>130</td>\n",
+       "      <td>Yes</td>\n",
+       "      <td>Yes</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>3</th>\n",
+       "      <td>4</td>\n",
+       "      <td>Sri Lanka</td>\n",
+       "      <td>55</td>\n",
+       "      <td>Male</td>\n",
+       "      <td>Yes</td>\n",
+       "      <td>Yes</td>\n",
+       "      <td>No</td>\n",
+       "      <td>Yes</td>\n",
+       "      <td>No</td>\n",
+       "      <td>Yes</td>\n",
+       "      <td>...</td>\n",
+       "      <td>No</td>\n",
+       "      <td>No</td>\n",
+       "      <td>0.000000</td>\n",
+       "      <td>0</td>\n",
+       "      <td>No Treatment</td>\n",
+       "      <td>100.000000</td>\n",
+       "      <td>0.00</td>\n",
+       "      <td>0</td>\n",
+       "      <td>Yes</td>\n",
+       "      <td>No</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>4</th>\n",
+       "      <td>5</td>\n",
+       "      <td>South Africa</td>\n",
+       "      <td>68</td>\n",
+       "      <td>Male</td>\n",
+       "      <td>No</td>\n",
+       "      <td>No</td>\n",
+       "      <td>No</td>\n",
+       "      <td>No</td>\n",
+       "      <td>No</td>\n",
+       "      <td>Yes</td>\n",
+       "      <td>...</td>\n",
+       "      <td>No</td>\n",
+       "      <td>No</td>\n",
+       "      <td>2.834789</td>\n",
+       "      <td>3</td>\n",
+       "      <td>No Treatment</td>\n",
+       "      <td>44.293199</td>\n",
+       "      <td>45354.75</td>\n",
+       "      <td>52</td>\n",
+       "      <td>No</td>\n",
+       "      <td>Yes</td>\n",
+       "    </tr>\n",
+       "  </tbody>\n",
+       "</table>\n",
+       "<p>5 rows × 25 columns</p>\n",
+       "</div>"
+      ],
+      "text/plain": [
+       "   ID       Country  Age  Gender Tobacco Use Alcohol Consumption  \\\n",
+       "0   1         Italy   36  Female         Yes                 Yes   \n",
+       "1   2         Japan   64    Male         Yes                 Yes   \n",
+       "2   3            UK   37  Female          No                 Yes   \n",
+       "3   4     Sri Lanka   55    Male         Yes                 Yes   \n",
+       "4   5  South Africa   68    Male          No                  No   \n",
+       "\n",
+       "  HPV Infection Betel Quid Use Chronic Sun Exposure Poor Oral Hygiene  ...  \\\n",
+       "0           Yes             No                   No               Yes  ...   \n",
+       "1           Yes             No                  Yes               Yes  ...   \n",
+       "2            No             No                  Yes               Yes  ...   \n",
+       "3            No            Yes                   No               Yes  ...   \n",
+       "4            No             No                   No               Yes  ...   \n",
+       "\n",
+       "  Difficulty Swallowing White or Red Patches in Mouth Tumor Size (cm)  \\\n",
+       "0                    No                            No        0.000000   \n",
+       "1                    No                            No        1.782186   \n",
+       "2                    No                           Yes        3.523895   \n",
+       "3                    No                            No        0.000000   \n",
+       "4                    No                            No        2.834789   \n",
+       "\n",
+       "  Cancer Stage Treatment Type Survival Rate (5-Year, %)  \\\n",
+       "0            0   No Treatment                100.000000   \n",
+       "1            1   No Treatment                 83.340103   \n",
+       "2            2        Surgery                 63.222871   \n",
+       "3            0   No Treatment                100.000000   \n",
+       "4            3   No Treatment                 44.293199   \n",
+       "\n",
+       "  Cost of Treatment (USD)  Economic Burden (Lost Workdays per Year)  \\\n",
+       "0                    0.00                                         0   \n",
+       "1                77772.50                                       177   \n",
+       "2               101164.50                                       130   \n",
+       "3                    0.00                                         0   \n",
+       "4                45354.75                                        52   \n",
+       "\n",
+       "   Early Diagnosis Oral Cancer (Diagnosis)  \n",
+       "0               No                      No  \n",
+       "1               No                     Yes  \n",
+       "2              Yes                     Yes  \n",
+       "3              Yes                      No  \n",
+       "4               No                     Yes  \n",
+       "\n",
+       "[5 rows x 25 columns]"
+      ]
+     },
+     "execution_count": 2,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "df = pd.read_csv(\"/kaggle/input/oral-cancer-prediction-dataset/oral_cancer_prediction_dataset.csv\")\n",
+    "df.head()"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "e72c139f",
+   "metadata": {
+    "papermill": {
+     "duration": 0.003077,
+     "end_time": "2025-03-12T07:03:58.613099",
+     "exception": false,
+     "start_time": "2025-03-12T07:03:58.610022",
+     "status": "completed"
+    },
+    "tags": []
+   },
+   "source": [
+    "## 3. Exploratory Data Analysis"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "945272c4",
+   "metadata": {
+    "papermill": {
+     "duration": 0.002933,
+     "end_time": "2025-03-12T07:03:58.619396",
+     "exception": false,
+     "start_time": "2025-03-12T07:03:58.616463",
+     "status": "completed"
+    },
+    "tags": []
+   },
+   "source": [
+    "## 4. Data Preprocessing"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "4ab55920",
+   "metadata": {
+    "papermill": {
+     "duration": 0.00294,
+     "end_time": "2025-03-12T07:03:58.625673",
+     "exception": false,
+     "start_time": "2025-03-12T07:03:58.622733",
+     "status": "completed"
+    },
+    "tags": []
+   },
+   "source": [
+    "## 5. Feature Selecton"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "741bff02",
+   "metadata": {
+    "papermill": {
+     "duration": 0.002939,
+     "end_time": "2025-03-12T07:03:58.631959",
+     "exception": false,
+     "start_time": "2025-03-12T07:03:58.629020",
+     "status": "completed"
+    },
+    "tags": []
+   },
+   "source": [
+    "## 6. Model Building"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "47f02569",
+   "metadata": {
+    "papermill": {
+     "duration": 0.00301,
+     "end_time": "2025-03-12T07:03:58.638158",
+     "exception": false,
+     "start_time": "2025-03-12T07:03:58.635148",
+     "status": "completed"
+    },
+    "tags": []
+   },
+   "source": [
+    "## 7. Hyperparameter Optimization"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "492d3fcd",
+   "metadata": {
+    "papermill": {
+     "duration": 0.00293,
+     "end_time": "2025-03-12T07:03:58.644330",
+     "exception": false,
+     "start_time": "2025-03-12T07:03:58.641400",
+     "status": "completed"
+    },
+    "tags": []
+   },
+   "source": [
+    "## 8. Model Evaluation"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "feee0791",
+   "metadata": {
+    "papermill": {
+     "duration": 0.002842,
+     "end_time": "2025-03-12T07:03:58.650353",
+     "exception": false,
+     "start_time": "2025-03-12T07:03:58.647511",
+     "status": "completed"
+    },
+    "tags": []
+   },
+   "source": [
+    "## 9. Feature Importance Analysis"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "12d20e45",
+   "metadata": {
+    "papermill": {
+     "duration": 0.002917,
+     "end_time": "2025-03-12T07:03:58.656565",
+     "exception": false,
+     "start_time": "2025-03-12T07:03:58.653648",
+     "status": "completed"
+    },
+    "tags": []
+   },
+   "source": [
+    "## 10. Results & Discussion"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "1f70d706",
+   "metadata": {
+    "papermill": {
+     "duration": 0.002846,
+     "end_time": "2025-03-12T07:03:58.662713",
+     "exception": false,
+     "start_time": "2025-03-12T07:03:58.659867",
+     "status": "completed"
+    },
+    "tags": []
+   },
+   "source": [
+    "## 11. Model Deployment Example"
+   ]
+  }
+ ],
+ "metadata": {
+  "kaggle": {
+   "accelerator": "none",
+   "dataSources": [
+    {
+     "datasetId": 6805468,
+     "sourceId": 10942559,
+     "sourceType": "datasetVersion"
+    }
+   ],
+   "dockerImageVersionId": 30918,
+   "isGpuEnabled": false,
+   "isInternetEnabled": true,
+   "language": "python",
+   "sourceType": "notebook"
+  },
+  "kernelspec": {
+   "display_name": "Python 3",
+   "language": "python",
+   "name": "python3"
+  },
+  "language_info": {
+   "codemirror_mode": {
+    "name": "ipython",
+    "version": 3
+   },
+   "file_extension": ".py",
+   "mimetype": "text/x-python",
+   "name": "python",
+   "nbconvert_exporter": "python",
+   "pygments_lexer": "ipython3",
+   "version": "3.10.12"
+  },
+  "papermill": {
+   "default_parameters": {},
+   "duration": 5.203425,
+   "end_time": "2025-03-12T07:03:59.286227",
+   "environment_variables": {},
+   "exception": null,
+   "input_path": "__notebook__.ipynb",
+   "output_path": "__notebook__.ipynb",
+   "parameters": {},
+   "start_time": "2025-03-12T07:03:54.082802",
+   "version": "2.6.0"
+  }
+ },
+ "nbformat": 4,
+ "nbformat_minor": 5
+}
